@@ -1,0 +1,61 @@
+Create configmap “redis-configmap-env” from "literal values"
+-----------------------------------------------------------------
+
+kubectl create configmap redis-configmap-env --from-literal=file.1=file.a --from-literal=file.2=file.b
+
+kubectl get configmap
+kubectl describe configmap redis-configmap-env
+
+
+-----------------------------------------------------------------------------------------------
+
+#vim redis-pod-configmap-env.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis-pod-configmap-env
+spec:
+  containers:
+  - name: redis-container
+    image: redis
+    env:
+      - name: FILE_1
+        valueFrom:
+          configMapKeyRef:
+            name: redis-configmap-env
+            key: file.1
+      - name: FILE_2
+        valueFrom:
+          configMapKeyRef:
+            name: redis-configmap-env
+            key: file.2
+  restartPolicy: Never
+
+
+# Create
+kubectl create -f  redis-pod-configmap-env.yaml
+
+# Display
+kubectl get pods
+kubectl get configmaps
+kubectl describe pod redis-pod-configmap-env
+
+
+# Validate from "inside" the pod
+kubectl exec redis-pod-configmap-env -it /bin/sh
+env | grep  FILE
+exit
+
+*************************************************************************************************************************************************
+
+Cleanup
+
+# Delete configmaps
+kubectl delete configmaps nginx-configmap-vol redis-configmap-env
+
+# Delete pods
+kubectl delete pods nginx-pod-configmap-vol redis-pod-configmap-env
+
+# Validate
+kubectl get pods
+kubectl get configmaps

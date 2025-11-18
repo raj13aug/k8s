@@ -1,0 +1,38 @@
+# nginx-pod.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:
+    app: nginx
+    tier: dev
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+
+*******************************************************************
+
+# Create and display PODs
+kubectl create -f nginx-pod.yaml
+
+kubectl get pod
+
+kubectl get pod -o wide
+kubectl get pod nginx-pod -o yaml
+
+kubectl describe pod nginx-pod
+
+
+*******************************************************************
+
+Test & Delete
+
+# To get inside the pod
+kubectl exec -it nginx-pod -- /bin/sh
+
+
+# Delete pod & svc
+kubectl delete svc nginx-pod
+kubectl delete pod nginx-pod
