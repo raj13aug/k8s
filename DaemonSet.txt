@@ -1,0 +1,39 @@
+2b. YAML
+
+# nginx-ds-subsetnodes.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx-ds
+spec:
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx
+      nodeSelector:
+        disktype: ssd
+  selector:
+    matchLabels:
+      name: nginx
+
+
+----------------------------------------
+
+2c. Create | Display | Validate
+
+kubectl create -f nginx-daemonset.yaml
+kubectl get po -o wide
+kubectl get ds
+kubectl describe ds nginx-ds
+
+*************************************************************************************************************************************************
+
+3. Ceanup
+
+kubectl delete ds fluentd-ds
+kubectl delete ds nginx-ds
+kubectl get po
